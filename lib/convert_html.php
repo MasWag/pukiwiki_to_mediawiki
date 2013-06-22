@@ -133,21 +133,6 @@ function & Factory_YTable(& $root, $text)
 	}
 }
 
-/*function exist_plugin_convert($text)
-{
-    return in_array($text, array('comment', 'bl2'));
-}
-
-function do_plugin_convert($name, $param)
-{
-    switch ($name) {
-    case 'comment':
-        return '<comment />';
-    case 'ls2':
-        return '{{Special:PrefixIndex/{{PAGENAME}}/}}';
-    }
-    }*/
-
 function & Factory_Div(& $root, $text)
 {
 	$matches = array();
@@ -184,7 +169,7 @@ class Inline extends Element
 	{
 		parent::Element();
 		$this->elements[] = trim((substr($text, 0, 1) == "\n") ?
-                                 $text : make_link($text));
+                                 $text : ($text));
 	}
 
 	function & insert(& $obj)
