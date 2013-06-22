@@ -133,7 +133,7 @@ function & Factory_YTable(& $root, $text)
 	}
 }
 
-function exist_plugin_convert($text)
+/*function exist_plugin_convert($text)
 {
     return in_array($text, array('comment', 'bl2'));
 }
@@ -146,7 +146,7 @@ function do_plugin_convert($name, $param)
     case 'ls2':
         return '{{Special:PrefixIndex/{{PAGENAME}}/}}';
     }
-}
+    }*/
 
 function & Factory_Div(& $root, $text)
 {
@@ -184,7 +184,7 @@ class Inline extends Element
 	{
 		parent::Element();
 		$this->elements[] = trim((substr($text, 0, 1) == "\n") ?
-			$text : ($text));
+                                 $text : make_link($text));
 	}
 
 	function & insert(& $obj)
@@ -272,7 +272,7 @@ class Heading extends Element
 
 	function toString()
 	{
-        return str_repeat('=', $this->level) . parent::toString() . str_repeat('=', $this->level) . "\n";
+        return str_repeat('=', $this->level) . preg_replace("/ \[#........\]/", '',parent::toString()) . str_repeat('=', $this->level) . "\n";
 		//return $this->msg_top .  $this->wrap(parent::toString(), 'h' . $this->level, ' id="' . $this->id . '"');
 	}
 }
