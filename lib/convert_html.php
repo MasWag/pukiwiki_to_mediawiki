@@ -169,7 +169,7 @@ class Inline extends Element
 	{
 		parent::Element();
 		$this->elements[] = trim((substr($text, 0, 1) == "\n") ?
-			$text : make_link($text));
+			$text : ($text));
 	}
 
 	function & insert(& $obj)
@@ -257,8 +257,8 @@ class Heading extends Element
 
 	function toString()
 	{
-		return $this->msg_top .  $this->wrap(parent::toString(),
-			'h' . $this->level, ' id="' . $this->id . '"');
+        return str_repeat('=', $this->level) . parent::toString() . str_repeat('=', $this->level) . "\n";
+		//return $this->msg_top .  $this->wrap(parent::toString(), 'h' . $this->level, ' id="' . $this->id . '"');
 	}
 }
 
@@ -278,10 +278,31 @@ class HRule extends Element
 
 	function toString()
 	{
-		global $hr;
-		return $hr;
+		return "----\n";
 	}
 }
+
+class Comment extends Element
+{
+    var $text;
+
+	function Comment(& $root, $text)
+	{
+		parent::Element();
+        $this->text = rtrim(substr($text,2), "\r\n");
+	}
+
+	function canContain(& $obj)
+	{
+		return FALSE;
+	}
+
+	function toString()
+	{
+		return '<!--' . $this->text . "-->";
+	}
+}
+
 
 // Lists (UL, OL, DL)
 class ListContainer extends Element
@@ -355,7 +376,10 @@ class ListContainer extends Element
 
 	function toString()
 	{
-		return $this->wrap(parent::toString(), $this->tag, $this->style);
+        global $list_tag;
+        $list_tag = $this->tag;
+
+        return parent::toString() . "\n";
 	}
 }
 
@@ -375,7 +399,14 @@ class ListElement extends Element
 
 	function toString()
 	{
-		return $this->wrap(parent::toString(), $this->head);
+        global $list_tag;
+
+        if ($list_tag == 'ul')
+            return str_repeat('#', $this->level) . parent::toString();
+        else if($list_tag == 'ol')
+            return str_repeat('*', $this->level) . parent::toString();
+        else if($list_tag == 'dl')
+            return ($this->head == 'dt' ? ';' : ':') . parent::toString();
 	}
 }
 
@@ -461,7 +492,7 @@ class BQuote extends Element
 
 	function toString()
 	{
-		return $this->wrap(parent::toString(), 'blockquote');
+		return $this->wrap(parent::toString(), 'blockquote')."\n";
 	}
 
 	function & end(& $root, $level)
@@ -538,7 +569,7 @@ class TableCell extends Element
 	{
 		if ($this->rowspan == 0 || $this->colspan == 0) return '';
 
-		$param = ' class="style_' . $this->tag . '"';
+		$param = "";//' class="style_' . $this->tag . '"';
 		if ($this->rowspan > 1)
 			$param .= ' rowspan="' . $this->rowspan . '"';
 		if ($this->colspan > 1) {
@@ -548,7 +579,10 @@ class TableCell extends Element
 		if (! empty($this->style))
 			$param .= ' style="' . join(' ', $this->style) . '"';
 
-		return $this->wrap(parent::toString(), $this->tag, $param, FALSE);
+        if($this->tag == 'th')
+            return '! ' . $param . " " . parent::toString() . "\n";
+        else if($this->tag == 'td')
+            return '| ' . $param . " " . parent::toString() . "\n";
 	}
 }
 
@@ -644,13 +678,14 @@ class Table extends Element
 				$row_string = '';
 				foreach (array_keys($row) as $ncol)
 					$row_string .= $row[$ncol]->toString();
-				$part_string .= $this->wrap($row_string, 'tr');
+				$part_string .= "|-\n" . $row_string;
 			}
-			$string .= $this->wrap($part_string, $part);
+			$string .= $part_string;//$this->wrap($part_string, $part);
 		}
-		$string = $this->wrap($string, 'table', ' class="style_table" cellspacing="1" border="0"');
 
-		return $this->wrap($string, 'div', ' class="ie5"');
+		$string = '{|' . $string . '|}';
+
+		return $string;
 	}
 }
 
@@ -828,7 +863,10 @@ class Body extends Element
 			$line = array_shift($lines);
 
 			// Escape comments
-			if (substr($line, 0, 2) == '//') continue;
+			if (substr($line, 0, 2) == '//') {
+                $this->insert(new Comment($this, $line));
+                continue;
+            }
 
 			if (preg_match('/^(LEFT|CENTER|RIGHT):(.*)$/', $line, $matches)) {
 				// <div style="text-align:...">
@@ -914,7 +952,8 @@ class Body extends Element
 		$this->count++;
 
 		// Heading id (specified by users)
-		$id = make_heading($text, FALSE); // Cut fixed-anchor from $text
+        $text = preg_replace('/^\*{0,3}/', '', $text);
+		//$id = make_heading($text, FALSE); // Cut fixed-anchor from $text
 		if ($id == '') {
 			// Not specified
 			$id     = & $autoid;
