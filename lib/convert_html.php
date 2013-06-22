@@ -15,7 +15,7 @@ function convert_html($lines)
 	static $contents_id = 0;
 
 	// Set digest
-	$digest = md5(join('', get_source($vars['page'])));
+	//$digest = md5(join('', get_source($vars['page'])));
 
 	if (! is_array($lines)) $lines = explode("\n", $lines);
 
@@ -131,6 +131,21 @@ function & Factory_YTable(& $root, $text)
 	} else {
 		return new YTable(csv_explode(',', substr($text, 1)));
 	}
+}
+
+function exist_plugin_convert($text)
+{
+    return in_array($text, array('comment', 'bl2'));
+}
+
+function do_plugin_convert($name, $param)
+{
+    switch ($name) {
+    case 'comment':
+        return '<comment />';
+    case 'ls2':
+        return '{{Special:PrefixIndex/{{PAGENAME}}/}}';
+    }
 }
 
 function & Factory_Div(& $root, $text)
@@ -1006,7 +1021,7 @@ class Contents_UList extends ListContainer
 	{
 		// Reformatting $text
 		// A line started with "\n" means "preformatted" ... X(
-		make_heading($text);
+		//make_heading($text);
 		$text = "\n" . '<a href="#' . $id . '">' . $text . '</a>' . "\n";
 		parent::ListContainer('ul', 'li', '-', str_repeat('-', $level));
 		$this->insert(Factory_Inline($text));
