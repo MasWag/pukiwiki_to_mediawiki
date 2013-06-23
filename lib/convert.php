@@ -9,7 +9,7 @@ function do_plugin_convert($name, $param)
 {
     switch ($name) {
     case 'comment':
-        return '<comment />';
+        return '<comments />';
     case 'ls2':
         return '{{Special:PrefixIndex/{{PAGENAME}}/}}';
     }

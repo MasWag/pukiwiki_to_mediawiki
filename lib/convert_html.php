@@ -168,8 +168,16 @@ class Inline extends Element
 	function Inline($text)
 	{
 		parent::Element();
-		$this->elements[] = trim((substr($text, 0, 1) == "\n") ?
-                                 $text : ($text));
+        if(trim((substr($text, 0, 1) == "\n")))
+            $this->elements[] = $text;
+        else {
+            $text = preg_replace('/&br;/','<br />', $text);
+            $text = preg_replace('/%%(.*)%%/' , '<del>$1<\/ del>', $text);
+            $text = preg_replace('/\[\[(.+?)>(.+?)\]\]/', '[[$2|$1]]', $text);
+            $text = preg_replace('/\[\[(.+?)\]\]/', '[[$1]]', $text);
+            $text = preg_replace('/&ref\((.+?)\);/', '[[File:$1]]', $text);
+            $this->elements[] = $text;
+        }
 	}
 
 	function & insert(& $obj)
@@ -402,9 +410,9 @@ class ListElement extends Element
         global $list_tag;
 
         if ($list_tag == 'ul')
-            return str_repeat('#', $this->level) . parent::toString();
-        else if($list_tag == 'ol')
             return str_repeat('*', $this->level) . parent::toString();
+        else if($list_tag == 'ol')
+            return str_repeat('#', $this->level) . parent::toString();
         else if($list_tag == 'dl')
             return ($this->head == 'dt' ? ';' : ':') . parent::toString();
 	}
