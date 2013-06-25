@@ -1,7 +1,7 @@
 <?php
 function exist_plugin_convert($text)
 {
-    return in_array($text, array('comment', 'bl2', 'br', 'contents'));
+    return in_array($text, array('comment', 'ls2','bl2', 'br', 'contents', 'ref'));
 }
 
 
@@ -13,9 +13,29 @@ function do_plugin_convert($name, $param)
     case 'comment':
         return '<comments />';
     case 'ls2':
-        return '{{Special:PrefixIndex/{{PAGENAME}}/}}';
+        if($param == '')
+            return '{{Special:PrefixIndex/{{PAGENAME}}/}}';
+        else
+            return '{{Special:PrefixIndex/' . $param . '/}}';
     case 'contents':
         return '';
+    case 'ref':
+        global $title;
+        $path = preg_replace(':/:', '_', $title);
+        $param = preg_replace(array('/"/', ':^./:'), array('',''), $param);
+        
+        if (in_array(end(explode('.', $param)), array('png', 'bmp', 'gif', 'jpg', 'jpeg' ))) {
+            if(is_url($param))
+                return '[[Image:' . $param . ']]';
+            else
+                return '[[Image:' . $path . '_' . $param . ']]';
+        } else {
+            if(is_url($param))
+                return '[[File:' . $param . ']]';
+            else
+                return '[[File:' . $path . '_' . $param . ']]';
+        }
+        
     }
 }
 

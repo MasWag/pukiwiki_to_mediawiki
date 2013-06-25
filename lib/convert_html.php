@@ -175,7 +175,9 @@ class Inline extends Element
         else {
 
             //$text = preg_replace('/&br;/','<br />', $text);
-            $text = preg_replace('/%%(.*)?%%/' , '<del>$1<\/ del>', $text);
+            $text = preg_replace('/%%(.*)?%%/' , '<del>$1</del>', $text);
+            $text = preg_replace('/' . "'''" . '(.*)?' . "'''/" , "''" . '$1' . "''", $text);
+            $text = preg_replace('/' . "''" . '(.*)?' . "''/" , "'''" . '$1' . "'''", $text);
             $text = preg_replace('/\[\[(.+?)>(.+?)\]\]/', '[[$2|$1]]', $text);
             $text = preg_replace('/\[\[(.+?)\]\]/', '[[$1]]', $text);
             $text = preg_replace('/\(\((.+?)\)\)/', '<ref>$1</ref>', $text);
@@ -242,7 +244,7 @@ class Paragraph extends Element
 
 	function toString()
 	{
-		return $this->wrap(parent::toString(), 'p', $this->param);
+		return parent::toString();
 	}
 }
 
@@ -885,6 +887,7 @@ class Body extends Element
 
 			// Escape comments
 			if (substr($line, 0, 2) == '//') {
+                //$line = '<!--' . rtrim(substr($line,2), "\r\n") . '-->';
                 $this->insert(new Comment($this, $line));
                 continue;
             }
