@@ -592,18 +592,18 @@ class TableCell extends Element
 
 		$param = "";//' class="style_' . $this->tag . '"';
 		if ($this->rowspan > 1)
-			$param .= ' rowspan="' . $this->rowspan . '"';
+			$param .= 'rowspan="' . $this->rowspan . '"|';
 		if ($this->colspan > 1) {
-			$param .= ' colspan="' . $this->colspan . '"';
+			$param .= 'colspan="' . $this->colspan . '"|';
 			unset($this->style['width']);
 		}
 		if (! empty($this->style))
 			$param .= ' style="' . join(' ', $this->style) . '"';
 
         if($this->tag == 'th')
-            return '! ' . $param . " " . parent::toString() . "\n";
+            return '!' . $param . " " . parent::toString() . "\n";
         else if($this->tag == 'td')
-            return '| ' . $param . " " . parent::toString() . "\n";
+            return '|' . $param . " " . parent::toString() . "\n";
 	}
 }
 
@@ -704,7 +704,7 @@ class Table extends Element
 			$string .= $part_string;//$this->wrap($part_string, $part);
 		}
 
-		$string = '{|' . $string . '|}';
+		$string = "{| class=\"wikitable\" \n" . $string . '|}';
 
 		return $string;
 	}

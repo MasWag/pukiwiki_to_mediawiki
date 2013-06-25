@@ -373,8 +373,6 @@ EOD;
 
 	function set($arr, $page)
 	{
-        echo(var_dump($arr) . "\n");
-        echo(var_dump($page) . "\n");
 		list(, , $alias, $name) = $this->splice($arr);
 		return parent::setParam($page, htmlspecialchars($name),
 			'', 'url', $alias == '' ? $name : $alias);
@@ -468,10 +466,7 @@ EOD;
 	
 	function toString()
 	{
-        if ($this->name != $this->alias)
-            return '[mailto:' . $this->name . ' ' . $this->alias . ']';
-        else
-            return '[mailto:' . $this->name . ']';
+        return '[mailto:' . $this->name . ' ' . $this->alias . ']';
 	}
 }
 
