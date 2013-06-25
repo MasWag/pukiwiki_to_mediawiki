@@ -21,7 +21,7 @@ function do_plugin_convert($name, $param)
 
 function exist_plugin_inline($text)
 {
-    return in_array($text, array('ref', 'new', 'size', 'contents'));
+    return in_array($text, array('ref', 'new', 'size', 'ruby', 'br'));
 }
 
 function do_plugin_inline($name, $args, $body)
@@ -47,6 +47,10 @@ function do_plugin_inline($name, $args, $body)
         break;
     case 'size':
         return '<font style="font-size:' . $aryargs[0]. 'px"> ' . $body .' </font>';
+    case 'ruby':
+        return '<ruby><rb>' . $body . '</rb><rp>(</rp><rt>' . $aryargs[0] . '</rt><rp>)</rp></ruby>';
+    case 'br':
+        return '<br/>';
     }
 }
 

@@ -173,20 +173,21 @@ class Inline extends Element
         if(trim((substr($text, 0, 1) == "\n")))
             $this->elements[] = $text;
         else {
-/*
-            $text = preg_replace('/&br;/','<br />', $text);
-            $text = preg_replace('/%%(.*)%%/' , '<del>$1<\/ del>', $text);
+
+            //$text = preg_replace('/&br;/','<br />', $text);
+            $text = preg_replace('/%%(.*)?%%/' , '<del>$1<\/ del>', $text);
             $text = preg_replace('/\[\[(.+?)>(.+?)\]\]/', '[[$2|$1]]', $text);
             $text = preg_replace('/\[\[(.+?)\]\]/', '[[$1]]', $text);
-            $path = preg_replace(':/:', '_', $title);
-            $text = preg_replace('/&ref\((.+?)\);/', '[[File:' . $path. '_$1]]', $text);
             $text = preg_replace('/\(\((.+?)\)\)/', '<ref>$1</ref>', $text);
-            $text = preg_replace('/&page/', '{{PAGENAME}}', $text);
-            $text = preg_replace('/&color\((.+?),(.+?)\){(.+?)};/', '<font color="$1" style="font-size:${1}px; background-color:$2"> $3 </font>', $text);
+            $text = preg_replace('/&page;/', '{{PAGENAME}}', $text);
+            //$path = preg_replace(':/:', '_', $title);
+            //$text = preg_replace('/&ref\((.+?)\);/', '[[File:' . $path. '_$1]]', $text);
+            //$text = preg_replace('/&page/', '{{PAGENAME}}', $text);
+            //$text = preg_replace('/&color\((.+?),(.+?)\){(.+?)};/', '<font color="$1" style="font-size:${1}px; background-color:$2"> $3 </font>', $text);
             
-            $text = preg_replace('/&size\((.+?)\){(.+?)};/', '<font style="font-size:${1}px;"> $2 </font>', $text);*/
+            //$text = preg_replace('/&size\((.+?)\){(.+?)};/', '<font style="font-size:${1}px;"> $2 </font>', $text);
             
-            global $WikiName, $nowikiname;
+            //global $WikiName, $nowikiname;
 
             $this->elements[] = make_link($text);
         }
