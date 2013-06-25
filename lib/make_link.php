@@ -60,10 +60,10 @@ class InlineConverter
 				'url_interwiki', // URLs (interwiki definition)
 				'mailto',        // mailto: URL schemes
 				'interwikiname', // InterWikiNames
-				'autolink',      // AutoLinks
-				'bracketname',   // BracketNames
-				'wikiname',      // WikiNames
-				'autolink_a',    // AutoLinks(alphabet)
+//				'autolink',      // AutoLinks
+//				'bracketname',   // BracketNames
+//				'wikiname',      // WikiNames
+//				'autolink_a',    // AutoLinks(alphabet)
 			);
 		}
 
@@ -385,7 +385,7 @@ EOD;
 		} else {
 			$rel = ' rel="nofollow"';
 		}
-		return '<a href="' . $this->name . '"' . $rel . '>' . $this->alias . '</a>';
+		return '[' . $this->name . ' ' . $this->alias . ']';
 	}
 }
 
@@ -423,7 +423,10 @@ EOD;
 
 	function toString()
 	{
-		return '<a href="' . $this->name . '" rel="nofollow">' . $this->alias . '</a>';
+        if ($this->name != $this->alias)
+            return '[' . $this->name . ' ' . $this->alias . ']';
+        else
+            return '[' . $this->name . ']';
 	}
 }
 
@@ -463,7 +466,10 @@ EOD;
 	
 	function toString()
 	{
-		return '<a href="mailto:' . $this->name . '" rel="nofollow">' . $this->alias . '</a>';
+        if ($this->name != $this->alias)
+            return '[mailto:' . $this->name . ' ' . $this->alias . ']';
+        else
+            return '[mailto:' . $this->name . ']';
 	}
 }
 
@@ -533,8 +539,10 @@ EOD;
 
 	function toString()
 	{
-		return '<a href="' . $this->url . $this->anchor . '" title="' .
-			$this->name . '" rel="nofollow">' . $this->alias . '</a>';
+        if ($this->name != $this->alias)
+            return '[[' . $this->name . '|' . $this->alias . ']]';
+        else 
+            return '[[' . $this->name . ']]';
 	}
 }
 

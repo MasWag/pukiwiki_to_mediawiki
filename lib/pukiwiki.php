@@ -103,10 +103,12 @@ if ($plugin != '') {
 
 $title = htmlspecialchars(strip_bracket($base));
 $page  = make_search($base);
+
 if (isset($retvars['msg']) && $retvars['msg'] != '') {
 	$title = str_replace('$1', $title, $retvars['msg']);
 	$page  = str_replace('$1', $page,  $retvars['msg']);
 }
+
 
 if (isset($retvars['body']) && $retvars['body'] != '') {
 	$body = & $retvars['body'];

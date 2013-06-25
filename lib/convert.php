@@ -1,27 +1,53 @@
 <?php
 function exist_plugin_convert($text)
 {
-    return in_array($text, array('comment', 'bl2'));
+    return in_array($text, array('comment', 'bl2', 'br', 'contents'));
 }
 
 
 function do_plugin_convert($name, $param)
 {
     switch ($name) {
+    case 'br':
+        return '<br />';
     case 'comment':
         return '<comments />';
     case 'ls2':
         return '{{Special:PrefixIndex/{{PAGENAME}}/}}';
+    case 'contents':
+        return '';
     }
 }
 
 function exist_plugin_inline($text)
 {
-    return 0;
+    return in_array($text, array('ref', 'new', 'size', 'contents'));
 }
 
-function do_plugin_inline($name, $param, $body)
+function do_plugin_inline($name, $args, $body)
 {
+    //echo("name: $name, param: $param, body: $body\n");
+
+    if ($args !== '') {
+		$aryargs = csv_explode(',', $args);
+	} else {
+		$aryargs = array();
+	}
+
+    switch ($name) {
+    case 'ref':
+        global $title;
+        $path = preg_replace(':/:', '_', $title);
+
+        if(is_url($aryargs[0])) {
+            return '[[File:' . $aryargs[0] . ']]';
+        } else {
+            return '[[Image:' . $path . '_' . preg_replace(array('/"/', ':^./:'), array('',''), $aryargs[0]) . ']]';
+        }
+        break;
+    case 'size':
+        return '<font style="font-size:' . $aryargs[0]. 'px"> ' . $body .' </font>';
+    }
 }
 
 include('html.php');
@@ -31,6 +57,12 @@ include ('func.php');
 
 $line_rules = "";
 $line_rules = array( "\r" => '<br />' . "\n",);
+
+if($argc < 2) {
+    echo("usage php convert.php [title]\n");
+    exit(1);
+}
+$title = $argv[1];
 
 error_reporting(E_ALL & ~E_NOTICE );
 
