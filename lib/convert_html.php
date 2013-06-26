@@ -176,9 +176,18 @@ class Inline extends Element
 
             //$text = preg_replace('/&br;/','<br />', $text);
             $text = preg_replace('/%%(.*)?%%/' , '<del>$1</del>', $text);
-            $text = preg_replace('/' . "'''" . '(.*)?' . "'''/" , "''" . '$1' . "''", $text);
-            $text = preg_replace('/' . "''" . '(.*)?' . "''/" , "'''" . '$1' . "'''", $text);
-            $text = preg_replace('/\[\[(.+?)>(.+?)\]\]/', '[[$2|$1]]', $text);
+            $text = preg_replace('/' . "'''" . '(.*?)' . "'''/" , "<i>" . '$1' . "</i>", $text);
+            $text = preg_replace('/' . "''" . '(.*?)' . "''/" , "<b>" . '$1' . "</b>", $text);
+            $text = preg_replace(':<i>(.*?)</i>:' , "''" . '$1' . "''", $text);
+            $text = preg_replace(':<b>(.*?)</b>:' , "'''" . '$1' . "'''", $text);
+            $text = preg_replace_callback('/\[\[(.+?)>(.+?)\]\]/', 
+                                          function ($maches) {
+                                              if(is_url($maches[2]))
+                                                  return '[[' . $maches[2] . ' ' . $maches[1] . ']]';
+                                              else
+                                                  return '[[' . $maches[2] . '|' . $maches[1] . ']]';
+                                          },
+                                          $text);
             $text = preg_replace('/\[\[(.+?)\]\]/', '[[$1]]', $text);
             $text = preg_replace('/\(\((.+?)\)\)/', '<ref>$1</ref>', $text);
             $text = preg_replace('/&page;/', '{{PAGENAME}}', $text);
