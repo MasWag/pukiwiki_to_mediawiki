@@ -1,7 +1,7 @@
 <?php
 function exist_plugin_convert($text)
 {
-    return in_array($text, array('comment', 'ls2','bl2', 'br', 'contents', 'ref'));
+    return in_array($text, array('comment', 'ls2','bl2', 'br', 'contents', 'ref', 'pcomment'));
 }
 
 
@@ -12,6 +12,8 @@ function do_plugin_convert($name, $param)
         return '<br />';
     case 'comment':
         return '<comments />';
+	case 'pcomment':
+		return '<comments />';
     case 'ls2':
         if($param == '')
             return '{{Special:PrefixIndex/{{PAGENAME}}/}}';
