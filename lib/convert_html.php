@@ -183,7 +183,7 @@ class Inline extends Element
             $text = preg_replace_callback('/\[\[(.+?)>(.+?)\]\]/', 
                                           function ($maches) {
                                               if(is_url($maches[2]))
-                                                  return '[[' . $maches[2] . ' ' . $maches[1] . ']]';
+                                                  return '[' . $maches[2] . ' ' . $maches[1] . ']';
                                               else
                                                   return '[[' . $maches[2] . '|' . $maches[1] . ']]';
                                           },
