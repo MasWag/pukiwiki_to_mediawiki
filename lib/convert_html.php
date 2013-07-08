@@ -180,7 +180,7 @@ class Inline extends Element
             $text = preg_replace('/' . "''" . '(.*?)' . "''/" , "<b>" . '$1' . "</b>", $text);
             $text = preg_replace(':<i>(.*?)</i>:' , "''" . '$1' . "''", $text);
             $text = preg_replace(':<b>(.*?)</b>:' , "'''" . '$1' . "'''", $text);
-            $text = preg_replace_callback('/\[\[(.+?)>(.+?)\]\]/', 
+            $text = preg_replace_callback('/\[\[([^¥]]+?)>([^¥]]+?)\]\]/', 
                                           function ($maches) {
                                               if(is_url($maches[2]))
                                                   return '[' . $maches[2] . ' ' . $maches[1] . ']';
